@@ -1,0 +1,25 @@
+version: "3"
+services:
+  db:
+    container_name: homebase_postgres__${HOMEBASE_POSTGRES_PORT}
+    restart: on-failure
+    build:
+      context: ./
+      dockerfile: ./postgres.podmanfile
+    ports:
+      - ${HOMEBASE_POSTGRES_PORT}:5432
+    volumes:
+      - ${HOMEBASE_POSTGRES_DIR}:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_PASSWORD=${HOMEBASE_POSTGRES_PASSWORD}
+  cache:
+    container_name: homebase_redis__${HOMEBASE_REDIS_PORT}
+    restart: on-failure
+    build:
+      context: ./
+      dockerfile: ./redis.podmanfile
+    ports:
+      - ${HOMEBASE_REDIS_PORT}:6379
+    volumes:
+      - ${HOMEBASE_REDIS_DIR}:/data
+      - ${HOMEBASE_REDIS_CONF}:/usr/local/etc/redis/redis.conf:ro
